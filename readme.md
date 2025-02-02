@@ -25,13 +25,13 @@ notification-system/
 ├── notification_sender/
 │   ├── app/
 │   │   ├── api.py
-│   │   ├── main.py
+│   │   ├── config.py
 │   │   ├── rabbitmq_manager.py
 │   │   ├── schemas.py
-│   │   ├── database.py
 │   ├── tests/
-│   │   ├── test_api.py
+│   │   ├── test_sender.py
 │   ├── Dockerfile
+│   ├── main.py
 │   ├── requirements.txt
 │
 ├── notification_receiver/
@@ -39,9 +39,11 @@ notification-system/
 │   │   ├── consumer.py
 │   │   ├── database.py
 │   │   ├── rabbitmq_manager.py
+│   │   ├── config.py
 │   ├── tests/
-│   │   ├── test_consumer.py
+│   │   ├── test_receiver.py
 │   ├── Dockerfile
+│   ├── main.py
 │   ├── requirements.txt
 │
 ├── docker-compose.yml
