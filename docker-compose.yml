@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"    # RabbitMQ broker port
+      - "15672:15672"  # RabbitMQ UI (http://localhost:15672)
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    networks:
+      - notifications_network
+
+  notification_sender:
+    build: ./notification_sender
+    container_name: notification_sender
+    ports:
+      - "8000:8000"  # Expose FastAPI endpoint
+    depends_on:
+      - rabbitmq
+    networks:
+      - notifications_network
+
+  notification_receiver:
+    build: ./notification_receiver
+    container_name: notification_receiver
+    depends_on:
+      - rabbitmq
+    networks:
+      - notifications_network
+
+networks:
+  notifications_network:
+    driver: bridge
