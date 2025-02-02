@@ -42,6 +42,28 @@ services:
 
     working_dir: /app
 
+  sender_tests:
+    build: ./notification_sender
+    container_name: notification_sender_tests
+    depends_on:
+      - rabbitmq
+    networks:
+      - notifications_network
+    command: ["pytest", "tests/"]
+    working_dir: /app
+
+  receiver_tests:
+    build:
+      context: ./notification_receiver
+    container_name: notification_receiver_tests
+    depends_on:
+      - mysql_db
+      - rabbitmq
+    networks:
+      - notifications_network
+    command: ["pytest", "tests/"]
+    working_dir: /app
+
   notification_receiver:
     build: ./notification_receiver
     container_name: notification_receiver

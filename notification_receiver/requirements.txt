@@ -1,2 +1,5 @@
 pika
 mysql-connector-python
+pytest
+httpx
+pytest-mock
