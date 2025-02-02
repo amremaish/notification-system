@@ -1,1 +1,2 @@
-pika  # RabbitMQ Client
+pika
+mysql-connector-python

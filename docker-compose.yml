@@ -5,13 +5,29 @@ services:
     image: "rabbitmq:3-management"
     container_name: rabbitmq
     ports:
-      - "5672:5672"    # RabbitMQ broker port
-      - "15672:15672"  # RabbitMQ UI (http://localhost:15672)
+      - "5672:5672"
+      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin
     networks:
       - notifications_network
+
+  mysql_db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: notifications
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    ports:
+      - "3306:3306"
+    networks:
+      - notifications_network
+    volumes:
+      - mysql_data:/var/lib/mysql
 
   notification_sender:
     build: ./notification_sender
@@ -20,17 +36,24 @@ services:
       - "8000:8000"  # Expose FastAPI endpoint
     depends_on:
       - rabbitmq
+      - mysql_db
     networks:
       - notifications_network
+
+    working_dir: /app
 
   notification_receiver:
     build: ./notification_receiver
     container_name: notification_receiver
     depends_on:
       - rabbitmq
+      - mysql_db
     networks:
       - notifications_network
 
 networks:
   notifications_network:
     driver: bridge
+
+volumes:
+  mysql_data:
